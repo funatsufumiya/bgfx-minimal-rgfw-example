@@ -7,6 +7,13 @@ local BIMG_DIR = "bimg"
 local BX_DIR = "bx"
 local GLFW_DIR = "glfw"
 
+local BGFX_EXAMPLES = path.join("bgfx", "examples")
+local BGFX_EXAMPLES_COMMON = path.join("bgfx", "examples", "common")
+local BGFX_EXAMPLES_ASSETS = path.join("bgfx", "examples", "common")
+local BGFX_EXAMPLES_RUNTIME = path.join("bgfx", "examples", "runtime")
+
+local BGFX_3RDPARTY_DIR = path.join("bgfx", "3rdparty")
+
 solution "bgfx-minimal-example"
 	location(BUILD_DIR)
 	startproject "helloworld"
@@ -37,7 +44,7 @@ solution "bgfx-minimal-example"
 		architecture "x86_64"
 	filter "system:macosx"
 		xcodebuildsettings {
-			["MACOSX_DEPLOYMENT_TARGET"] = "10.9",
+			["MACOSX_DEPLOYMENT_TARGET"] = "14.0",
 			["ALWAYS_SEARCH_USER_PATHS"] = "YES", -- This is the minimum version of macos we'll be able to run on
 		};
 
@@ -50,6 +57,54 @@ function setBxCompat()
 		includedirs { path.join(BX_DIR, "include/compat/osx") }
 		buildoptions { "-x objective-c++" }
 end
+
+project "cubes"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++14"
+	exceptionhandling "Off"
+	rtti "Off"
+	defines "ENTRY_CONFIG_USE_GLFW"
+	defines "ENTRY_CONFIG_IMPLEMENT_MAIN"
+	defines "ENTRY_IMPLEMENT_MAIN"
+	files {
+		path.join(BGFX_EXAMPLES, "01-cubes/cubes.cpp"),
+		path.join(BGFX_3RDPARTY_DIR, "*.cpp"),
+		path.join(BGFX_3RDPARTY_DIR, "dear-imgui/*.cpp"),
+		path.join(BGFX_3RDPARTY_DIR, "meshoptimizer/src/*.cpp"),
+		path.join(BGFX_EXAMPLES_COMMON, "*/*.cpp"),
+		path.join(BGFX_EXAMPLES_COMMON, "*.cpp"),
+	}
+	excludes
+	{
+		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_android.cpp"),
+		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_html5.cpp"),
+		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_noop.cpp"),
+		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_x11.cpp"),
+		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_sdl.cpp"),
+		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_windows.cpp"),
+	}
+	includedirs 
+	{
+		path.join(BGFX_EXAMPLES_COMMON),
+		path.join(BGFX_3RDPARTY_DIR),
+		path.join(BGFX_DIR, "include"),
+		path.join(BX_DIR, "include"),
+		path.join(BIMG_DIR, "include"),
+		path.join(GLFW_DIR, "include")
+	}
+	filter "system:macosx"
+		files {
+			path.join(BGFX_EXAMPLES_COMMON, "entry/entry_osx.mm"),
+		}
+	links { "bgfx", "bimg", "bx", "glfw" }
+	filter "system:windows"
+		links { "gdi32", "kernel32", "psapi" }
+	filter "system:linux"
+		links { "dl", "GL", "pthread", "X11" }
+	filter "system:macosx"
+		links { "QuartzCore.framework", "Metal.framework", "Cocoa.framework", "IOKit.framework", "CoreVideo.framework" }
+	setBxCompat()
 	
 project "helloworld"
 	kind "ConsoleApp"
@@ -144,15 +199,18 @@ project "bimg"
 	files
 	{
 		path.join(BIMG_DIR, "include/bimg/*.h"),
-		path.join(BIMG_DIR, "src/image.cpp"),
-		path.join(BIMG_DIR, "src/image_gnf.cpp"),
+		path.join(BIMG_DIR, "src/*.cpp"),
 		path.join(BIMG_DIR, "src/*.h"),
-		path.join(BIMG_DIR, "3rdparty/astc-codec/src/decoder/*.cc")
+		path.join(BIMG_DIR, "3rdparty/astc-codec/src/decoder/*.cc"),
+		path.join(BIMG_DIR, "3rdparty/tinyexr/deps/miniz/miniz.c"),
 	}
 	includedirs
 	{
 		path.join(BX_DIR, "include"),
 		path.join(BIMG_DIR, "include"),
+		path.join(BIMG_DIR, "3rdparty"),
+		path.join(BIMG_DIR, "3rdparty/iqa/include"),
+		path.join(BIMG_DIR, "3rdparty/tinyexr/deps/miniz"),
 		path.join(BIMG_DIR, "3rdparty/astc-codec"),
 		path.join(BIMG_DIR, "3rdparty/astc-codec/include"),
 	}
@@ -231,11 +289,13 @@ project "glfw"
 		{
 			path.join(GLFW_DIR, "src/cocoa_*.*"),
 			path.join(GLFW_DIR, "src/posix_thread.h"),
+			path.join(GLFW_DIR, "src/posix_module.h"),
 			path.join(GLFW_DIR, "src/nsgl_context.h"),
 			path.join(GLFW_DIR, "src/egl_context.h"),
 			path.join(GLFW_DIR, "src/osmesa_context.h"),
 
 			path.join(GLFW_DIR, "src/posix_thread.c"),
+			path.join(GLFW_DIR, "src/posix_module.c"),
 			path.join(GLFW_DIR, "src/nsgl_context.m"),
 			path.join(GLFW_DIR, "src/egl_context.c"),
 			path.join(GLFW_DIR, "src/nsgl_context.m"),

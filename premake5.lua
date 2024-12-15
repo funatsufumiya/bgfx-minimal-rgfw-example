@@ -18,7 +18,9 @@ solution "bgfx-minimal-example"
 	location(BUILD_DIR)
 	startproject "helloworld"
 	configurations { "Release", "Debug" }
-	if os.is64bit() and not os.istarget("windows") then
+	if os.istarget("macosx") and os.targetarch() == "arm64" then
+		platforms "arm64"
+	elseif os.is64bit() and not os.istarget("windows") then
 		platforms "x86_64"
 	else
 		platforms { "x86", "x86_64" }
@@ -42,6 +44,8 @@ solution "bgfx-minimal-example"
 		architecture "x86"
 	filter "platforms:x86_64"
 		architecture "x86_64"
+	filter "platforms:arm64"
+		architecture "arm64"
 	filter "system:macosx"
 		xcodebuildsettings {
 			["MACOSX_DEPLOYMENT_TARGET"] = "14.0",

@@ -1,3 +1,9 @@
+## bgfx-minimal-rgfw-example
+
+***WORK IN PROGRESS***
+
+This is a fork of [bgfx-minimal-example](https://github.com/funatsufumiya/bgfx-minimal-example) which uses [RGFW](https://github.com/ColleagueRiley/RGFW) for windowing instead of GLFW.
+
 ## bgfx-minimal-example
 
 [![License](https://img.shields.io/badge/license-BSD--2%20clause-blue.svg)](https://bkaradzic.github.io/bgfx/license.html)

@@ -10,6 +10,3 @@
 [submodule "bgfx"]
 	path = bgfx
 	url = https://github.com/bkaradzic/bgfx/
-[submodule "RGFW"]
-	path = RGFW
-	url = https://github.com/ColleagueRiley/RGFW

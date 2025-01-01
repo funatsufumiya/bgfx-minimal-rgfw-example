@@ -6,8 +6,6 @@ local BGFX_DIR = "bgfx"
 local BIMG_DIR = "bimg"
 local BX_DIR = "bx"
 local GLFW_DIR = "glfw"
-local RGFW_DIR = "RGFW"
-
 local BGFX_EXAMPLES = path.join("bgfx", "examples")
 local BGFX_EXAMPLES_COMMON = path.join("bgfx", "examples", "common")
 local BGFX_EXAMPLES_ASSETS = path.join("bgfx", "examples", "common")
@@ -97,7 +95,6 @@ project "cubes"
 		path.join(BX_DIR, "include"),
 		path.join(BIMG_DIR, "include"),
 		path.join(GLFW_DIR, "include")
-		-- path.join(RGFW_DIR, "include")
 	}
 	filter "system:macosx"
 		files {
@@ -119,8 +116,8 @@ project "helloworld"
 	exceptionhandling "Off"
 	rtti "Off"
 	files {
+		"RGFW.h",
 		"helloworld.cpp",
-		path.join(RGFW_DIR, "include", "RGFW.h")
 	}
 	includedirs
 	{
@@ -147,8 +144,7 @@ project "helloworld_mt"
 	{
 		path.join(BGFX_DIR, "include"),
 		path.join(BX_DIR, "include"),
-		path.join(GLFW_DIR, "include"),
-		path.join(RGFW_DIR, "include")
+		path.join(GLFW_DIR, "include")
 	}
 	links { "bgfx", "bimg", "bx", "glfw" }
 	filter "system:windows"

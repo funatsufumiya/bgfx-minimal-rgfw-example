@@ -7,9 +7,12 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 
+extern "C" {
 #define RGFW_NO_API
 #define RGFWDEF
-#include "RGFW/rgfw.h"
+#include "RGFW.h"
+}
+
 // #if BX_PLATFORM_LINUX
 // #define GLFW_EXPOSE_NATIVE_X11
 // #elif BX_PLATFORM_WINDOWS

@@ -1,6 +1,6 @@
 [submodule "glfw"]
-	path = glfw
-	url = https://github.com/glfw/glfw
+  path = glfw
+  url = https://github.com/glfw/glfw
 [submodule "bx"]
 	path = bx
 	url = https://github.com/bkaradzic/bx
@@ -10,3 +10,6 @@
 [submodule "bgfx"]
 	path = bgfx
 	url = https://github.com/bkaradzic/bgfx/
+[submodule "RGFW"]
+	path = RGFW
+	url = https://github.com/ColleagueRiley/RGFW

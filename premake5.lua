@@ -139,12 +139,14 @@ project "helloworld_mt"
 	cppdialect "C++14"
 	exceptionhandling "Off"
 	rtti "Off"
-	files "helloworld_mt.cpp"
+	files {
+		"RGFW.h",
+		"helloworld_mt.cpp"
+	}
 	includedirs
 	{
 		path.join(BGFX_DIR, "include"),
 		path.join(BX_DIR, "include"),
-		path.join(GLFW_DIR, "include")
 	}
 	links { "bgfx", "bimg", "bx", "glfw" }
 	filter "system:windows"

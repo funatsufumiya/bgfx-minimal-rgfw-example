@@ -8,15 +8,14 @@
 #include <bx/thread.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
-#include <GLFW/glfw3.h>
-#if BX_PLATFORM_LINUX
-#define GLFW_EXPOSE_NATIVE_X11
-#elif BX_PLATFORM_WINDOWS
-#define GLFW_EXPOSE_NATIVE_WIN32
-#elif BX_PLATFORM_OSX
-#define GLFW_EXPOSE_NATIVE_COCOA
-#endif
-#include <GLFW/glfw3native.h>
+
+#define RGFW_IMPLEMENTATION
+#define RGFW_NO_API
+#define RGFWDEF
+extern "C" {
+#include "RGFW.h"
+}
+
 #include "logo.h"
 
 static bx::DefaultAllocator s_allocator;
@@ -38,7 +37,7 @@ struct KeyEvent
 {
 	EventType type = EventType::Key;
 	int key;
-	int action;
+	u8 pressed;
 };
 
 struct ResizeEvent
@@ -48,17 +47,18 @@ struct ResizeEvent
 	uint32_t height;
 };
 
-static void glfw_errorCallback(int error, const char *description)
-{
-	fprintf(stderr, "GLFW error %d: %s\n", error, description);
-}
-
-static void glfw_keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
-{
+void rgfw_keyCallback(RGFW_window* win, u32 key , u32 keyChar , char keyName[16], u8 lockState, u8 pressed) {
 	auto keyEvent = new KeyEvent;
 	keyEvent->key = key;
-	keyEvent->action = action;
+	keyEvent->pressed = pressed;
 	s_apiThreadEvents.push(keyEvent);
+}
+
+void rgfw_resizeCallback(RGFW_window* win, RGFW_rect rect) {
+	auto resizeEvent = new ResizeEvent;
+	resizeEvent->width = rect.w;
+	resizeEvent->height = rect.h;
+	s_apiThreadEvents.push(resizeEvent);
 }
 
 struct ApiThreadArgs
@@ -92,8 +92,11 @@ static int32_t runApiThread(bx::Thread *self, void *userData)
 		while (auto ev = (EventType *)s_apiThreadEvents.pop()) {
 			if (*ev == EventType::Key) {
 				auto keyEvent = (KeyEvent *)ev;
-				if (keyEvent->key == GLFW_KEY_F1 && keyEvent->action == GLFW_RELEASE)
+				// if (keyEvent->key == GLFW_KEY_F1 && keyEvent->action == GLFW_RELEASE)
+				// 	showStats = !showStats;
+				if (keyEvent->key == RGFW_F1 && keyEvent->pressed) {
 					showStats = !showStats;
+				}
 			}
 			else if (*ev == EventType::Resize) {
 				auto resizeEvent = (ResizeEvent *)ev;
@@ -128,51 +131,46 @@ static int32_t runApiThread(bx::Thread *self, void *userData)
 
 int main(int argc, char **argv)
 {
-	// Create a GLFW window without an OpenGL context.
-	glfwSetErrorCallback(glfw_errorCallback);
-	if (!glfwInit())
+	RGFW_window* window = RGFW_createWindow("helloworld multithreaded", RGFW_RECT(0, 0, 1024, 768), (u16)(RGFW_CENTER | RGFW_NO_RESIZE));
+
+	if (!window) {
 		return 1;
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	GLFWwindow *window = glfwCreateWindow(1024, 768, "helloworld multithreaded", nullptr, nullptr);
-	if (!window)
-		return 1;
-	glfwSetKeyCallback(window, glfw_keyCallback);
+	}
+
+	RGFW_setKeyCallback(rgfw_keyCallback);
+
 	// Call bgfx::renderFrame before bgfx::init to signal to bgfx not to create a render thread.
 	// Most graphics APIs must be used on the same thread that created the window.
 	bgfx::renderFrame();
 	// Create a thread to call the bgfx API from (except bgfx::renderFrame).
 	ApiThreadArgs apiThreadArgs;
+
 #if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
-	apiThreadArgs.platformData.ndt = glfwGetX11Display();
-	apiThreadArgs.platformData.nwh = (void*)(uintptr_t)glfwGetX11Window(window);
+	apiThreadArgs.platformData.ndt = window->src.display;
+	apiThreadArgs.platformData.nwh = window->src.window;
 #elif BX_PLATFORM_OSX
-	apiThreadArgs.platformData.nwh = glfwGetCocoaWindow(window);
+	apiThreadArgs.platformData.nwh = window->src.window;
 #elif BX_PLATFORM_WINDOWS
 	apiThreadArgs.platformData.nwh = glfwGetWin32Window(window);
 #endif
-	int width, height;
-	glfwGetWindowSize(window, &width, &height);
+
+	int width = 1024;
+	int height = 768;
 	apiThreadArgs.width = (uint32_t)width;
 	apiThreadArgs.height = (uint32_t)height;
+	// apiThreadArgs.reset = BGFX_RESET_VSYNC;
+
 	bx::Thread apiThread;
 	apiThread.init(runApiThread, &apiThreadArgs);
 	// Run GLFW message pump.
 	bool exit = false;
 	while (!exit) {
-		glfwPollEvents();
+		while(RGFW_window_checkEvent(window)) {
+		}
 		// Send window close event to the API thread.
-		if (glfwWindowShouldClose(window)) {
+		if (RGFW_window_shouldClose(window)) {
 			s_apiThreadEvents.push(new ExitEvent);
 			exit = true;
-		}
-		// Send window resize event to the API thread.
-		int oldWidth = width, oldHeight = height;
-		glfwGetWindowSize(window, &width, &height);
-		if (width != oldWidth || height != oldHeight) {
-			auto resize = new ResizeEvent;
-			resize->width = (uint32_t)width;
-			resize->height = (uint32_t)height;
-			s_apiThreadEvents.push(resize);
 		}
 		// Wait for the API thread to call bgfx::frame, then process submitted rendering primitives.
 		bgfx::renderFrame();
@@ -180,6 +178,6 @@ int main(int argc, char **argv)
 	// Wait for the API thread to finish before shutting down.
 	while (bgfx::RenderFrame::NoContext != bgfx::renderFrame()) {}
 	apiThread.shutdown();
-	glfwTerminate();
+	RGFW_window_close(window);
 	return apiThread.getExitCode();
 }

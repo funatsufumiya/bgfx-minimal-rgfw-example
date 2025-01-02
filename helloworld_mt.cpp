@@ -153,7 +153,7 @@ int main(int argc, char **argv)
 #elif BX_PLATFORM_OSX
 	apiThreadArgs.platformData.nwh = window->src.window;
 #elif BX_PLATFORM_WINDOWS
-	apiThreadArgs.platformData.nwh = glfwGetWin32Window(window);
+	apiThreadArgs.platformData.nwh = indow->src.window;
 #endif
 
 	int width = 1024;

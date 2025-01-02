@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 #elif BX_PLATFORM_OSX
 	init.platformData.nwh = window->src.window;
 #elif BX_PLATFORM_WINDOWS
-	init.platformData.nwh = glfwGetWin32Window(window);
+	init.platformData.nwh = window->src.window;
 #endif
 
 	int width = 1024;

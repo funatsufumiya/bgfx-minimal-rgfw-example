@@ -2,6 +2,8 @@
 
 This is a fork of [bgfx-minimal-example](https://github.com/funatsufumiya/bgfx-minimal-example) which uses [RGFW](https://github.com/ColleagueRiley/RGFW) for windowing instead of GLFW.
 
+TODO: windows (vs2022) error fix (maybe need to `gcc -c RGFW.c -fPIC` or something to create as shared lib?)
+
 ### Build and Run
 
 #### for example: macOS arm64

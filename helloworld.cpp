@@ -14,28 +14,9 @@ extern "C" {
 #include "RGFW.h"
 }
 
-// #if BX_PLATFORM_LINUX
-// #define GLFW_EXPOSE_NATIVE_X11
-// #elif BX_PLATFORM_WINDOWS
-// #define GLFW_EXPOSE_NATIVE_WIN32
-// #elif BX_PLATFORM_OSX
-// #define GLFW_EXPOSE_NATIVE_COCOA
-// #endif
-// #include <GLFW/glfw3native.h>
 #include "logo.h"
 
 static bool s_showStats = false;
-
-// static void glfw_errorCallback(int error, const char *description)
-// {
-// 	fprintf(stderr, "GLFW error %d: %s\n", error, description);
-// }
-
-// static void glfw_keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
-// {
-// 	if (key == GLFW_KEY_F1 && action == GLFW_RELEASE)
-// 		s_showStats = !s_showStats;
-// }
 
 void rgfw_keyCallback(RGFW_window* win, u32 key , u32 keyChar , char keyName[16], u8 lockState, u8 pressed) {
     if (key == RGFW_Escape && pressed) {
@@ -56,19 +37,11 @@ void rgfw_resizeCallback(RGFW_window* win, RGFW_rect rect) {
 
 int main(int argc, char **argv)
 {
-	// Create a GLFW window without an OpenGL context.
-	// glfwSetErrorCallback(glfw_errorCallback);
-	// if (!glfwInit())
-	// 	return 1;
-
-	// glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	// GLFWwindow *window = glfwCreateWindow(1024, 768, "helloworld", nullptr, nullptr);
-	 
 	RGFW_window* window = RGFW_createWindow("helloworld", RGFW_RECT(0, 0, 1024, 768), (u16)(RGFW_CENTER | RGFW_NO_RESIZE));
 
-	if (!window)
+	if (!window) {
 		return 1;
-	// glfwSetKeyCallback(window, glfw_keyCallback);
+	}
 
 	RGFW_setKeyCallback(rgfw_keyCallback);
 
@@ -78,19 +51,18 @@ int main(int argc, char **argv)
 
 	// Initialize bgfx using the native window handle and window resolution.
 	bgfx::Init init;
+
 #if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
 	init.platformData.ndt = window->src.display;
 	init.platformData.nwh = window->src.window;
 #elif BX_PLATFORM_OSX
-	// init.platformData.nwh = glfwGetCocoaWindow(window);
 	init.platformData.nwh = window->src.window;
 #elif BX_PLATFORM_WINDOWS
 	init.platformData.nwh = glfwGetWin32Window(window);
 #endif
+
 	int width = 1024;
 	int height = 768;
-	// glfwGetWindowSize(window, &width, &height);
-	// RGFW_getWindowSize(window, &width, &height);
 	init.resolution.width = (uint32_t)width;
 	init.resolution.height = (uint32_t)height;
 	init.resolution.reset = BGFX_RESET_VSYNC;
@@ -100,18 +72,12 @@ int main(int argc, char **argv)
 	const bgfx::ViewId kClearView = 0;
 	bgfx::setViewClear(kClearView, BGFX_CLEAR_COLOR);
 	bgfx::setViewRect(kClearView, 0, 0, bgfx::BackbufferRatio::Equal);
-	// while (!glfwWindowShouldClose(window)) {
+
 	while (!RGFW_window_shouldClose(window)) {
 		while(RGFW_window_checkEvent(window)) {
 		}
 
 		// Handle window resize.
-		// int oldWidth = width, oldHeight = height;
-		// glfwGetWindowSize(window, &width, &height);
-		// if (width != oldWidth || height != oldHeight) {
-		// 	bgfx::reset((uint32_t)width, (uint32_t)height, BGFX_RESET_VSYNC);
-		// 	bgfx::setViewRect(kClearView, 0, 0, bgfx::BackbufferRatio::Equal);
-		// }
 		if (shouldResize) {
 			shouldResize = false;
 			bgfx::reset((uint32_t)newWidth, (uint32_t)newHeight, BGFX_RESET_VSYNC);
@@ -133,8 +99,9 @@ int main(int argc, char **argv)
 		// Advance to next frame. Process submitted rendering primitives.
 		bgfx::frame();
 	}
+
 	bgfx::shutdown();
-	// glfwTerminate();
 	RGFW_window_close(window);
+
 	return 0;
 }

@@ -15,6 +15,7 @@ extern "C" {
 }
 
 #include "logo.h"
+#include <iostream>
 
 static bool s_showStats = false;
 
@@ -37,13 +38,15 @@ void rgfw_resizeCallback(RGFW_window* win, RGFW_rect rect) {
 
 int main(int argc, char **argv)
 {
-	RGFW_window* window = RGFW_createWindow("helloworld", RGFW_RECT(0, 0, 1024, 768), (u16)(RGFW_CENTER | RGFW_NO_RESIZE));
+	// RGFW_window* window = RGFW_createWindow("helloworld", RGFW_RECT(0, 0, 1024, 768), (u16)(RGFW_CENTER | RGFW_NO_RESIZE));
+	RGFW_window* window = RGFW_createWindow("helloworld", RGFW_RECT(0, 0, 1024, 768), (u16)(RGFW_CENTER));
 
 	if (!window) {
 		return 1;
 	}
 
 	RGFW_setKeyCallback(rgfw_keyCallback);
+	RGFW_setWindowResizeCallback(rgfw_resizeCallback);
 
 	// Call bgfx::renderFrame before bgfx::init to signal to bgfx not to create a render thread.
 	// Most graphics APIs must be used on the same thread that created the window.

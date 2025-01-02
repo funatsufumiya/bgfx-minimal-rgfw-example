@@ -4,12 +4,20 @@ This is a fork of [bgfx-minimal-example](https://github.com/funatsufumiya/bgfx-m
 
 ### Build and Run
 
+#### for example: macOS arm64
+
 ```bash
-# for example: macOS arm64
 $ premake5 --arch=arm64 xcode4
 
 # and then open the generated project file with Xcode, or:
 $ xcodebuild -project build/xcode4/helloworld.xcodeproj -configuration Debug
+```
+
+#### for example: Windows
+
+```bash
+$ premake5.exe vs2022
+$ start build\vs2022\bgfx-minimal-rgfw-example.sln
 ```
 
 ## bgfx-minimal-example

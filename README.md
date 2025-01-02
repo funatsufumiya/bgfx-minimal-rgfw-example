@@ -6,7 +6,7 @@ TODO: windows (vs2022) error fix (maybe need to `gcc -c RGFW.c -fPIC` or somethi
 
 ### Build and Run
 
-#### for example: macOS arm64
+#### macOS (arm64)
 
 ```bash
 $ premake5 --arch=arm64 xcode4
@@ -15,11 +15,18 @@ $ premake5 --arch=arm64 xcode4
 $ xcodebuild -project build/xcode4/helloworld.xcodeproj -configuration Debug
 ```
 
-#### for example: Windows
+#### Windows
 
 ```bash
 $ premake5.exe vs2022
 $ start build\vs2022\bgfx-minimal-rgfw-example.sln
+```
+
+#### Linux
+
+```bash
+$ premake5 gmake2
+$ make -C build/gmake2 #config=debug64
 ```
 
 ## bgfx-minimal-example

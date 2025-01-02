@@ -5,7 +5,6 @@ end
 local BGFX_DIR = "bgfx"
 local BIMG_DIR = "bimg"
 local BX_DIR = "bx"
-local GLFW_DIR = "glfw"
 local BGFX_EXAMPLES = path.join("bgfx", "examples")
 local BGFX_EXAMPLES_COMMON = path.join("bgfx", "examples", "common")
 local BGFX_EXAMPLES_ASSETS = path.join("bgfx", "examples", "common")
@@ -60,54 +59,6 @@ function setBxCompat()
 		includedirs { path.join(BX_DIR, "include/compat/osx") }
 		buildoptions { "-x objective-c++" }
 end
-
-project "cubes"
-	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++14"
-	exceptionhandling "Off"
-	rtti "Off"
-	defines "ENTRY_CONFIG_USE_GLFW"
-	defines "ENTRY_CONFIG_IMPLEMENT_MAIN"
-	defines "ENTRY_IMPLEMENT_MAIN"
-	files {
-		path.join(BGFX_EXAMPLES, "01-cubes/cubes.cpp"),
-		path.join(BGFX_3RDPARTY_DIR, "*.cpp"),
-		path.join(BGFX_3RDPARTY_DIR, "dear-imgui/*.cpp"),
-		path.join(BGFX_3RDPARTY_DIR, "meshoptimizer/src/*.cpp"),
-		path.join(BGFX_EXAMPLES_COMMON, "*/*.cpp"),
-		path.join(BGFX_EXAMPLES_COMMON, "*.cpp"),
-	}
-	excludes
-	{
-		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_android.cpp"),
-		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_html5.cpp"),
-		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_noop.cpp"),
-		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_x11.cpp"),
-		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_sdl.cpp"),
-		path.join(BGFX_EXAMPLES_COMMON, "entry/entry_windows.cpp"),
-	}
-	includedirs 
-	{
-		path.join(BGFX_EXAMPLES_COMMON),
-		path.join(BGFX_3RDPARTY_DIR),
-		path.join(BGFX_DIR, "include"),
-		path.join(BX_DIR, "include"),
-		path.join(BIMG_DIR, "include"),
-		path.join(GLFW_DIR, "include")
-	}
-	filter "system:macosx"
-		files {
-			path.join(BGFX_EXAMPLES_COMMON, "entry/entry_osx.mm"),
-		}
-	links { "bgfx", "bimg", "bx", "glfw" }
-	filter "system:windows"
-		links { "gdi32", "kernel32", "psapi" }
-	filter "system:linux"
-		links { "dl", "GL", "pthread", "X11" }
-	filter "system:macosx"
-		links { "QuartzCore.framework", "Metal.framework", "Cocoa.framework", "IOKit.framework", "CoreVideo.framework" }
-	setBxCompat()
 	
 project "helloworld"
 	kind "ConsoleApp"
@@ -148,7 +99,7 @@ project "helloworld_mt"
 		path.join(BGFX_DIR, "include"),
 		path.join(BX_DIR, "include"),
 	}
-	links { "bgfx", "bimg", "bx", "glfw" }
+	links { "bgfx", "bimg", "bx"}
 	filter "system:windows"
 		links { "gdi32", "kernel32", "psapi" }
 	filter "system:linux"
@@ -253,61 +204,3 @@ project "bx"
 	filter "action:vs*"
 		defines "_CRT_SECURE_NO_WARNINGS"
 	setBxCompat()
-		
-project "glfw"
-	kind "StaticLib"
-	language "C"
-	files
-	{
-		path.join(GLFW_DIR, "include/GLFW/*.h"),
-		path.join(GLFW_DIR, "src/context.c"),
-		path.join(GLFW_DIR, "src/egl_context.*"),
-		path.join(GLFW_DIR, "src/init.c"),
-		path.join(GLFW_DIR, "src/input.c"),
-		path.join(GLFW_DIR, "src/internal.h"),
-		path.join(GLFW_DIR, "src/monitor.c"),
-		path.join(GLFW_DIR, "src/null*.*"),
-		path.join(GLFW_DIR, "src/osmesa_context.*"),
-		path.join(GLFW_DIR, "src/platform.c"),
-		path.join(GLFW_DIR, "src/vulkan.c"),
-		path.join(GLFW_DIR, "src/window.c"),
-	}
-	includedirs { path.join(GLFW_DIR, "include") }
-	filter "system:windows"
-		defines "_GLFW_WIN32"
-		files
-		{
-			path.join(GLFW_DIR, "src/win32_*.*"),
-			path.join(GLFW_DIR, "src/wgl_context.*")
-		}
-	filter "system:linux"
-		defines "_GLFW_X11"
-		files
-		{
-			path.join(GLFW_DIR, "src/glx_context.*"),
-			path.join(GLFW_DIR, "src/linux*.*"),
-			path.join(GLFW_DIR, "src/posix*.*"),
-			path.join(GLFW_DIR, "src/x11*.*"),
-			path.join(GLFW_DIR, "src/xkb*.*")
-		}
-	filter "system:macosx"
-		defines "_GLFW_COCOA"
-		files
-		{
-			path.join(GLFW_DIR, "src/cocoa_*.*"),
-			path.join(GLFW_DIR, "src/posix_thread.h"),
-			path.join(GLFW_DIR, "src/posix_module.h"),
-			path.join(GLFW_DIR, "src/nsgl_context.h"),
-			path.join(GLFW_DIR, "src/egl_context.h"),
-			path.join(GLFW_DIR, "src/osmesa_context.h"),
-
-			path.join(GLFW_DIR, "src/posix_thread.c"),
-			path.join(GLFW_DIR, "src/posix_module.c"),
-			path.join(GLFW_DIR, "src/nsgl_context.m"),
-			path.join(GLFW_DIR, "src/egl_context.c"),
-			path.join(GLFW_DIR, "src/nsgl_context.m"),
-			path.join(GLFW_DIR, "src/osmesa_context.c"),                       
-		}
-
-	filter "action:vs*"
-		defines "_CRT_SECURE_NO_WARNINGS"

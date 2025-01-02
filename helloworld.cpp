@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 
 #if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
 	init.platformData.ndt = window->src.display;
-	init.platformData.nwh = window->src.window;
+	init.platformData.nwh = (void*)window->src.window;
 #elif BX_PLATFORM_OSX
 	init.platformData.nwh = window->src.window;
 #elif BX_PLATFORM_WINDOWS

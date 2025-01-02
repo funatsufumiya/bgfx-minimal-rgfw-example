@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 
 #if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
 	apiThreadArgs.platformData.ndt = window->src.display;
-	apiThreadArgs.platformData.nwh = window->src.window;
+	apiThreadArgs.platformData.nwh = (void*)window->src.window;
 #elif BX_PLATFORM_OSX
 	apiThreadArgs.platformData.nwh = window->src.window;
 #elif BX_PLATFORM_WINDOWS

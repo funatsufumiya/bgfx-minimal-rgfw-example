@@ -4,6 +4,16 @@
 
 This is a fork of [bgfx-minimal-example](https://github.com/funatsufumiya/bgfx-minimal-example) which uses [RGFW](https://github.com/ColleagueRiley/RGFW) for windowing instead of GLFW.
 
+### Build and Run
+
+```bash
+# for example: macOS arm64
+$ premake5 --arch=arm64 xcode4
+
+# and then open the generated project file with Xcode, or:
+$ xcodebuild -project build/xcode4/helloworld.xcodeproj -configuration Debug
+```
+
 ## bgfx-minimal-example
 
 [![License](https://img.shields.io/badge/license-BSD--2%20clause-blue.svg)](https://bkaradzic.github.io/bgfx/license.html)

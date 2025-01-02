@@ -13,7 +13,7 @@ local BGFX_EXAMPLES_RUNTIME = path.join("bgfx", "examples", "runtime")
 
 local BGFX_3RDPARTY_DIR = path.join("bgfx", "3rdparty")
 
-solution "bgfx-minimal-example"
+solution "bgfx-minimal-rgfw-example"
 	location(BUILD_DIR)
 	startproject "helloworld"
 	configurations { "Release", "Debug" }

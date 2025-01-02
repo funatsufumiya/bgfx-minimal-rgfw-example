@@ -1,7 +1,5 @@
 ## bgfx-minimal-rgfw-example
 
-***WORK IN PROGRESS, NOT READY FOR USE***
-
 This is a fork of [bgfx-minimal-example](https://github.com/funatsufumiya/bgfx-minimal-example) which uses [RGFW](https://github.com/ColleagueRiley/RGFW) for windowing instead of GLFW.
 
 ### Build and Run

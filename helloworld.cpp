@@ -7,9 +7,10 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 
-extern "C" {
+#define RGFW_IMPLEMENTATION
 #define RGFW_NO_API
 #define RGFWDEF
+extern "C" {
 #include "RGFW.h"
 }
 
@@ -74,6 +75,7 @@ int main(int argc, char **argv)
 	// Call bgfx::renderFrame before bgfx::init to signal to bgfx not to create a render thread.
 	// Most graphics APIs must be used on the same thread that created the window.
 	bgfx::renderFrame();
+
 	// Initialize bgfx using the native window handle and window resolution.
 	bgfx::Init init;
 #if BX_PLATFORM_LINUX || BX_PLATFORM_BSD

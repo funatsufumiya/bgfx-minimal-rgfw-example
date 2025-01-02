@@ -7749,7 +7749,7 @@ RGFW_UNUSED(win); /*!< if buffer rendering is not being used */
 	} else
 #endif
 	{
-		NSRect contentRect = (NSRect){{0, 0}, {win->r.w, win->r.h}};
+		NSRect contentRect = (NSRect){{0, 0}, {(double)win->r.w, (double)win->r.h}};
 		win->src.view = ((id(*)(id, SEL, NSRect))objc_msgSend)
 			(NSAlloc((id)objc_getClass("NSView")), sel_registerName("initWithFrame:"),
 				contentRect);
@@ -8310,7 +8310,7 @@ RGFW_UNUSED(win); /*!< if buffer rendering is not being used */
 		win->r.x = v.x;
 		win->r.y = v.y;
 		((void(*)(id, SEL, NSRect, bool, bool))objc_msgSend)
-			((id)win->src.window, sel_registerName("setFrame:display:animate:"), (NSRect){{win->r.x, win->r.y}, {win->r.w, win->r.h}}, true, true);
+			((id)win->src.window, sel_registerName("setFrame:display:animate:"), (NSRect){{(double)win->r.x, (double)win->r.y}, {(double)win->r.w, (double)win->r.h}}, true, true);
 	}
 
 	void RGFW_window_resize(RGFW_window* win, RGFW_area a) {
@@ -8319,7 +8319,7 @@ RGFW_UNUSED(win); /*!< if buffer rendering is not being used */
 		win->r.w = a.w;
 		win->r.h = a.h;
 		((void(*)(id, SEL, NSRect, bool, bool))objc_msgSend)
-			((id)win->src.window, sel_registerName("setFrame:display:animate:"), (NSRect){{win->r.x, win->r.y}, {win->r.w, win->r.h}}, true, true);
+			((id)win->src.window, sel_registerName("setFrame:display:animate:"), (NSRect){{(double)win->r.x, (double)win->r.y}, {(double)win->r.w, (double)win->r.h}}, true, true);
 	}
 
 	void RGFW_window_minimize(RGFW_window* win) {
@@ -8352,7 +8352,7 @@ RGFW_UNUSED(win); /*!< if buffer rendering is not being used */
 			return;
 
 		((void (*)(id, SEL, NSSize))objc_msgSend)
-			((id)win->src.window, sel_registerName("setMinSize:"), (NSSize){a.w, a.h});
+			((id)win->src.window, sel_registerName("setMinSize:"), (NSSize){(double)a.w, (double)a.h});
 	}
 
 	void RGFW_window_setMaxSize(RGFW_window* win, RGFW_area a) {
@@ -8360,7 +8360,7 @@ RGFW_UNUSED(win); /*!< if buffer rendering is not being used */
 			return;
 
 		((void (*)(id, SEL, NSSize))objc_msgSend)
-			((id)win->src.window, sel_registerName("setMaxSize:"), (NSSize){a.w, a.h});
+			((id)win->src.window, sel_registerName("setMaxSize:"), (NSSize){(double)a.w, (double)a.h});
 	}
 
 	void RGFW_window_setIcon(RGFW_window* win, u8* data, RGFW_area area, i32 channels) {
@@ -8372,7 +8372,7 @@ RGFW_UNUSED(win); /*!< if buffer rendering is not being used */
 		memcpy(NSBitmapImageRep_bitmapData(representation), data, area.w * area.h * channels);
 
 		// Add ze representation.
-		id dock_image = NSImage_initWithSize((NSSize){area.w, area.h});
+		id dock_image = NSImage_initWithSize((NSSize){(double)area.w, (double)area.h});
 		NSImage_addRepresentation(dock_image, representation);
 
 		// Finally, set the dock image to it.
@@ -8402,7 +8402,7 @@ RGFW_UNUSED(win); /*!< if buffer rendering is not being used */
 		memcpy(NSBitmapImageRep_bitmapData(representation), image, a.w * a.h * channels);
 
 		// Add ze representation.
-		id cursor_image = NSImage_initWithSize((NSSize){a.w, a.h});
+		id cursor_image = NSImage_initWithSize((NSSize){(double)a.w, (double)a.h});
 		NSImage_addRepresentation(cursor_image, representation);
 
 		// Finally, set the cursor image.

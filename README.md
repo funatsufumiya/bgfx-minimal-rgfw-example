@@ -2,9 +2,7 @@
 
 This is a fork of [bgfx-minimal-example](https://github.com/funatsufumiya/bgfx-minimal-example) which uses [RGFW](https://github.com/ColleagueRiley/RGFW) for windowing instead of GLFW.
 
-TODO: fix compilation error on linux
-
-### Build and Run
+### Build
 
 #### macOS (arm64)
 
@@ -26,7 +24,7 @@ $ start build\vs2022\bgfx-minimal-rgfw-example.sln
 
 ```bash
 $ premake5 gmake2
-$ make -C build/gmake2
+$ make -C build/gmake2 -j8
 ```
 
 ## bgfx-minimal-example

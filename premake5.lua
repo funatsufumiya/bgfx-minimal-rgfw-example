@@ -81,7 +81,7 @@ project "helloworld"
 	filter "system:windows"
 		links { "gdi32", "kernel32", "psapi" }
 	filter "system:linux"
-		links { "dl", "GL", "pthread", "X11" }
+		links { "dl", "GL", "pthread", "X11", "Xrandr" }
 	filter "system:macosx"
 		links { "QuartzCore.framework", "Metal.framework", "Cocoa.framework", "IOKit.framework", "CoreVideo.framework" }
 	setBxCompat()
@@ -105,7 +105,7 @@ project "helloworld_mt"
 	filter "system:windows"
 		links { "gdi32", "kernel32", "psapi" }
 	filter "system:linux"
-		links { "dl", "GL", "pthread", "X11" }
+		links { "dl", "GL", "pthread", "X11", "Xrandr" }
 	filter "system:macosx"
 		links { "QuartzCore.framework", "Metal.framework", "Cocoa.framework", "IOKit.framework", "CoreVideo.framework" }
 	setBxCompat()

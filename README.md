@@ -26,7 +26,7 @@ $ start build\vs2022\bgfx-minimal-rgfw-example.sln
 
 ```bash
 $ premake5 gmake2
-$ make -C build/gmake2 #config=debug64
+$ make -C build/gmake2
 ```
 
 ## bgfx-minimal-example

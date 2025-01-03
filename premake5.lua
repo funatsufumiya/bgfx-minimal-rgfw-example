@@ -49,6 +49,8 @@ solution "bgfx-minimal-rgfw-example"
 			["MACOSX_DEPLOYMENT_TARGET"] = "14.0",
 			["ALWAYS_SEARCH_USER_PATHS"] = "YES", -- This is the minimum version of macos we'll be able to run on
 		};
+	filter "action:vs*"
+		defines { "_WIN32_WINNT=0x0A00" }
 
 function setBxCompat()
 	filter "action:vs*"

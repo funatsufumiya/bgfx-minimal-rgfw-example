@@ -12,9 +12,7 @@
 #define RGFW_IMPLEMENTATION
 #define RGFW_NO_API
 #define RGFWDEF
-extern "C" {
 #include "RGFW.h"
-}
 
 #include "logo.h"
 

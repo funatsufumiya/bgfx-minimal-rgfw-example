@@ -494,23 +494,65 @@ typedef RGFW_ENUM(u8, RGFW_event_types) {
 #endif
 
 /*! basic vector type, if there's not already a point/vector type of choice */
+// #ifndef RGFW_point
+// 	typedef struct { i32 x, y; } RGFW_point;
+// #endif
 #ifndef RGFW_point
-	typedef struct { i32 x, y; } RGFW_point;
+    #ifdef __cplusplus
+        typedef struct RGFW_point_struct {
+            i32 x, y;
+            RGFW_point_struct(i32 _x, i32 _y) : x(_x), y(_y) {}
+            RGFW_point_struct() : x(0), y(0) {}
+        } RGFW_point;
+    #else
+        typedef struct { i32 x, y; } RGFW_point;
+    #endif
 #endif
 
 /*! basic rect type, if there's not already a rect type of choice */
+// #ifndef RGFW_rect
+// 	typedef struct { i32 x, y, w, h; } RGFW_rect;
+// #endif
 #ifndef RGFW_rect
-	typedef struct { i32 x, y, w, h; } RGFW_rect;
+	#ifdef __cplusplus
+	typedef struct RGFW_rect_struct {
+			i32 x, y, w, h;
+			RGFW_rect_struct(i32 _x, i32 _y, i32 _w, i32 _h) : x(_x), y(_y), w(_w), h(_h) {}
+			RGFW_rect_struct() : x(0), y(0), w(0), h(0) {}
+		} RGFW_rect;
+	#else
+		typedef struct { i32 x, y, w, h; } RGFW_rect;
+	#endif
 #endif
 
 /*! basic area type, if there's not already a area type of choice */
+// #ifndef RGFW_area
+// 	typedef struct { u32 w, h; } RGFW_area;
+// #endif
 #ifndef RGFW_area
-	typedef struct { u32 w, h; } RGFW_area;
+	#ifdef __cplusplus
+	typedef struct RGFW_area_struct {
+			u32 w, h;
+			RGFW_area_struct(u32 _w, u32 _h) : w(_w), h(_h) {}
+			RGFW_area_struct() : w(0), h(0) {}
+		} RGFW_area;
+	#else
+		typedef struct { u32 w, h; } RGFW_area;
+	#endif
 #endif
 
-#define RGFW_POINT(x, y) (RGFW_point){(i32)(x), (i32)(y)}
-#define RGFW_RECT(x, y, w, h) (RGFW_rect){(i32)(x), (i32)(y), (i32)(w), (i32)(h)}
-#define RGFW_AREA(w, h) (RGFW_area){(u32)(w), (u32)(h)}
+// #define RGFW_POINT(x, y) (RGFW_point){(i32)(x), (i32)(y)}
+// #define RGFW_RECT(x, y, w, h) (RGFW_rect){(i32)(x), (i32)(y), (i32)(w), (i32)(h)}
+// #define RGFW_AREA(w, h) (RGFW_area){(u32)(w), (u32)(h)}
+#ifdef __cplusplus
+    #define RGFW_POINT(x, y) RGFW_point(x, y)
+    #define RGFW_RECT(x, y, w, h) RGFW_rect(x, y, w, h)
+	#define RGFW_AREA(w, h) RGFW_area(w, h)
+#else
+    #define RGFW_POINT(x, y) (RGFW_point){x, y}
+    #define RGFW_RECT(x, y, w, h) (RGFW_rect){x, y, w, h}
+	#define RGFW_AREA(w, h) (RGFW_area){w, h}
+#endif
 
 #ifndef RGFW_NO_MONITOR
 	/*! structure for monitor data */
@@ -5442,7 +5484,7 @@ RGFW_UNUSED(win); /*!< if buffer rendering is not being used */
 
 		Class.hIcon = (HICON)LoadImageA(GetModuleHandleW(NULL), "RGFW_ICON", IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
 		if (Class.hIcon == NULL) {
-            Class.hIcon = (HICON)LoadImageA(NULL, IDI_APPLICATION, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
+            Class.hIcon = (HICON)LoadImageA(NULL, (LPCSTR)(IDI_APPLICATION), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_SHARED);
         }
 
 		RegisterClassA(&Class);
